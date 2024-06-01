@@ -1,0 +1,21 @@
+/*
+    Browswer: Chrome
+    Operating System: Edition - Windows 11 Home , Version - 23H2
+    Browser Version: Version 123.0.6312.59 (Official Build) (64-bit)
+
+    -- Website: Atlas MongoDB
+    -- Network Access: 0.0.0.0
+    -- Node.js version: v20.11.1
+    -- Atlas Version: 7.0.8
+*/
+
+//Datadump using mongodump
+
+//Tenant
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"1376e09912b74c68852f7b67f894cd50","collectionName":"Tenant","type":"collection"}
+
+//Landlord
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"44a96b57ec9143408d66ce564e53419d","collectionName":"Landlord","type":"collection"}
+
+//Contract
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"4054b908ffad460688e351f4aa7b8dce","collectionName":"Contract","type":"collection"}

@@ -1,0 +1,17 @@
+{
+  "name": "summer-exam-coding-assignment",
+  "version": "1.0.0",
+  "description": "Coding Exam For Summer",
+  "main": "exam.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ting Xi Song",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.6.1",
+    "node.js": "^0.0.1-security"
+  }
+}

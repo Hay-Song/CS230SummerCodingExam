@@ -1,0 +1,74 @@
+/*
+    Browswer: Chrome
+    Operating System: Edition - Windows 11 Home , Version - 23H2
+    Browser Version: Version 123.0.6312.59 (Official Build) (64-bit)
+
+    -- Website: Atlas MongoDB
+    -- Network Access: 0.0.0.0
+    -- Node.js version: v20.11.1
+    -- Atlas Version: 7.0.8
+    -- const uri = "mongodb+srv://haysong69:Mongo-12Bongo123@cluster0.82ajhwe.mongodb.net/";
+
+    There should be a database called "Exam" in the collections where the 10 Tenants, 6 Landlords, and 12 Contracts are already made
+
+    W3Schools
+    expressjs.com
+    GeeksForGeeks
+    Codeacademy
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px black;
+}
+
+legend {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    margin-bottom: 15px; 
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #3b93f1;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    margin-top: 15px; 
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: hsl(211, 94%, 55%);
+}
+
+input:required {
+    border-color: #dc3545;
+}

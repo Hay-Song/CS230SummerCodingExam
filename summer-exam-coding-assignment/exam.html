@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html>
+<!-- 
+    Browswer: Chrome
+    Operating System: Edition - Windows 11 Home , Version - 23H2
+    Browser Version: Version 123.0.6312.59 (Official Build) (64-bit)
+
+    -- Website: Atlas MongoDB
+    -- Network Access: 0.0.0.0
+    -- Node.js version: v20.11.1
+    -- Atlas Version: 7.0.8
+    -- const uri = "mongodb+srv://haysong69:Mongo-12Bongo123@cluster0.82ajhwe.mongodb.net/";
+
+    There should be a database called "Exam" in the collections where the 10 Tenants, 6 Landlords, and 12 Contracts are already made
+
+    W3Schools
+    expressjs.com
+    GeeksForGeeks
+    Codeacademy
+-->
+
+<head>
+    <title>Summer Exam Coding Assignment</title>
+    <link rel="stylesheet" href="exam.css">
+    <script>
+        async function sendTenant(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const tenantFormData = {
+                tenantID: document.getElementById('tenantID').value,
+                tenantTitle: document.getElementById('tenantTitle').value,
+                tenantFirstName: document.getElementById('tenantFirstName').value,
+                tenantSurname: document.getElementById('tenantSurname').value,
+                tenantPhoneNumber: document.getElementById('tenantPhoneNumber').value,
+                tenantEmailAddress: document.getElementById('tenantEmailAddress').value,
+                tenantAddressLine1: document.getElementById('tenantAddressLine1').value,
+                tenantAddressLine2: document.getElementById('tenantAddressLine2').value,
+                tenantTown: document.getElementById('tenantTown').value,
+                tenantCounty_City: document.getElementById('tenantCounty_City').value,
+                tenantEircode: document.getElementById('tenantEircode').value,
+            };
+
+            try {
+                // Make a POST request to the server using fetch
+                const response = await fetch('http://localhost:3000/createTenant', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(tenantFormData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+                // Display success prompt
+                displaySuccessPrompt();
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function sendLandlord(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const landLordFormData = {
+                landLordID: document.getElementById('landLordID').value,
+                landLordTitle: document.getElementById('landLordTitle').value,
+                landLordFirstName: document.getElementById('landLordFirstName').value,
+                landLordSurname: document.getElementById('landLordSurname').value,
+                landLordPhoneNumber: document.getElementById('landLordPhoneNumber').value,
+                landLordEmailAddress: document.getElementById('landLordEmailAddress').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                councilPermission: document.getElementById('councilPermission').value,
+                tenantEmailPermission: document.getElementById('tenantEmailPermission').value,
+                landLordAddressLine1: document.getElementById('landLordAddressLine1').value,
+                landLordAddressLine2: document.getElementById('landLordAddressLine2').value,
+                landLordTown: document.getElementById('landLordTown').value,
+                landLordCounty_City: document.getElementById('landLordCounty_City').value,
+                landLordEircode: document.getElementById('landLordEircode').value,
+            };
+
+            try {
+                // Make a POST request to the server using fetch
+                const response = await fetch('http://localhost:3000/createlandLord', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(landLordFormData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+                // Display success prompt
+                displaySuccessPrompt();
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function sendContract(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const contractFormData = {
+                contractID: document.getElementById('contractID').value,
+                date: document.getElementById('date').value,
+                propertyAddress: document.getElementById('propertyAddress').value,
+                tenant: document.getElementById('tenant').value.split(","), // Split tenant input by comma
+                landLord: document.getElementById('landLord').value,
+                monthlyFee: document.getElementById('monthlyFee').value,
+                propertyDoorNumber: document.getElementById('propertyDoorNumber').value,
+                contractLength: document.getElementById('contractLength').value,
+                propertyType: document.getElementById('propertyType').value
+            };
+
+            // Check if tenant inputs are provided
+            if (contractFormData.tenant.length === 0) {
+                // Display error message if no tenant input is provided
+                displayErrorPrompt("At least one tenant ID is required.");
+                return; // Exit function to prevent further execution
+            }
+
+            // Check if there are more than three tenant inputs
+            if (contractFormData.tenant.length > 3) {
+                // Display error message if more than three tenant inputs are provided
+                displayErrorPrompt("Maximum of three tenant IDs allowed.");
+                return; // Exit function to prevent further execution
+            }
+
+            // Check if landLordID is provided
+            if (!contractFormData.landLord) {
+                // Display error message if landLordID is not provided
+                displayErrorPrompt("LandLord ID is required.");
+                return; // Exit function to prevent further execution
+            }
+
+            try {
+
+                // Make a POST request to the server to create the contract
+                const response = await fetch('http://localhost:3000/createContract', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(contractFormData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+                // Display success prompt
+                displaySuccessPrompt();
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        function displaySuccessPrompt() {
+            // Create a success prompt element
+            const successPrompt = document.createElement('div');
+            successPrompt.textContent = 'Created successfully!';
+            successPrompt.classList.add('success-prompt');
+
+            // Append the prompt to the body
+            document.body.appendChild(successPrompt);
+
+            // Remove the prompt after 3 seconds
+            setTimeout(() => {
+                document.body.removeChild(successPrompt);
+            }, 3000);
+        }
+
+        function displayErrorPrompt(message) {
+            // Create an error prompt element
+            const errorPrompt = document.createElement('div');
+            errorPrompt.textContent = message;
+            errorPrompt.classList.add('error-prompt');
+
+            // Append the prompt to the body
+            document.body.appendChild(errorPrompt);
+
+            // Remove the prompt after 3 seconds
+            setTimeout(() => {
+                document.body.removeChild(errorPrompt);
+            }, 3000);
+        }
+
+        async function retrieveTenant(event) {
+            event.preventDefault(); // Prevent the default form submission
+            const tenantID = document.getElementById('retrieveTenantID').value;
+
+            try {
+                //Make a GET request to retrieve the tenant by ID
+                const response = await fetch(`http://localhost:3000/getTenant/${tenantID}`);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const tenantData = await response.json();
+                console.log(tenantData);
+
+                //Display retrieved tenant data in the textarea as JSON
+                document.getElementById('tenantDataTextarea').value = JSON.stringify(tenantData, null, 2);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function retrieveLandlord(event) {
+            event.preventDefault(); // Prevent the default form submission
+            const landLordID = document.getElementById('retrieveLandlordID').value;
+
+            try {
+                //Make a GET request to retrieve the landlord by ID
+                const response = await fetch(`http://localhost:3000/getLandlord/${landLordID}`);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const landLordData = await response.json();
+                console.log(landLordData);
+
+                //Display retrieved landlord data in the textarea as JSON
+                document.getElementById('landLordDataTextarea').value = JSON.stringify(landLordData, null, 2);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function retrieveContract(event) {
+            event.preventDefault(); // Prevent the default form submission
+            const contractID = document.getElementById('retrieveContractID').value;
+
+            try {
+                // Make a GET request to retrieve the contract by ID
+                const response = await fetch(`http://localhost:3000/getContract/${contractID}`);
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const contractData = await response.json();
+                console.log(contractData);
+
+                // Display retrieved contract data in the textarea as JSON
+                document.getElementById('contractDataTextarea').value = JSON.stringify(contractData, null, 2);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function updateTenant(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const tenantUpdateData = {
+                tenantID: document.getElementById('updateTenantID').value,
+                tenantTitle: document.getElementById('updateTenantTitle').value,
+                tenantFirstName: document.getElementById('updateTenantFirstName').value,
+                tenantSurname: document.getElementById('updateTenantSurname').value,
+                tenantPhoneNumber: document.getElementById('updateTenantPhoneNumber').value,
+                tenantEmailAddress: document.getElementById('updateTenantEmailAddress').value,
+                tenantAddressLine1: document.getElementById('updateTenantAddressLine1').value,
+                tenantAddressLine2: document.getElementById('updateTenantAddressLine2').value,
+                tenantTown: document.getElementById('updateTenantTown').value,
+                tenantCounty_City: document.getElementById('updateTenantCounty_City').value,
+                tenantEircode: document.getElementById('updateTenantEircode').value,
+            };
+
+            try {
+                // Make a PUT request to the server to update the tenant
+                const response = await fetch(`http://localhost:3000/updateTenant/${tenantUpdateData.tenantID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(tenantUpdateData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function updateLandlord(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const landLordUpdateData = {
+                landLordID: document.getElementById('updateLandLordID').value,
+                landLordTitle: document.getElementById('updateLandLordTitle').value,
+                landLordFirstName: document.getElementById('updateLandLordFirstName').value,
+                landLordSurname: document.getElementById('updateLandLordSurname').value,
+                landLordPhoneNumber: document.getElementById('updateLandLordPhoneNumber').value,
+                landLordEmailAddress: document.getElementById('updateLandLordEmailAddress').value,
+                dateOfBirth: document.getElementById('updateDateOfBirth').value,
+                councilPermission: document.getElementById('updateCouncilPermission').value,
+                tenantEmailPermission: document.getElementById('updateTenantEmailPermission').value,
+                landLordAddressLine1: document.getElementById('updateLandLordAddressLine1').value,
+                landLordAddressLine2: document.getElementById('updateLandLordAddressLine2').value,
+                landLordTown: document.getElementById('updateLandLordTown').value,
+                landLordCounty_City: document.getElementById('updateLandLordCounty_City').value,
+                landLordEircode: document.getElementById('updateLandLordEircode').value,
+            };
+
+            try {
+                // Make a PUT request to the server to update the tenant
+                const response = await fetch(`http://localhost:3000/updateLandlord/${landLordUpdateData.landLordID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(landLordUpdateData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function updateContract(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const contractUpdateData = {
+                date: document.getElementById('updateDate').value,
+                propertyAddress: document.getElementById('updatePropertyAddress').value,
+                tenant: document.getElementById('updateTenant').value.split(","), // Split tenant input by comma
+                landLord: document.getElementById('updateLandlord').value,
+                monthlyFee: document.getElementById('updateMonthlyFee').value,
+                propertyDoorNumber: document.getElementById('updatePropertyDoorNumber').value,
+                contractLength: document.getElementById('updateContractLength').value,
+                propertyType: document.getElementById('updatePropertyType').value
+            };
+
+            try {
+                // Make a PUT request to the server to update the tenant
+                const response = await fetch(`http://localhost:3000/updateContract/${contractUpdateData.contractID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(contractUpdateData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function deleteTenant(tenantID) {
+            try {
+                // Make a DELETE request to the server to delete the tenant
+                const response = await fetch(`http://localhost:3000/deleteTenant/${tenantID}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.status == 404)
+                {
+                    alert('Error: Failed')
+                }
+                else
+                {
+                    alert('Successfully deleted')
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function deleteLandLord(landLordID) {
+            try {
+                // Make a DELETE request to the server to delete the tenant
+                const response = await fetch(`http://localhost:3000/deleteLandLord/${landLordID}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        async function deleteContract(contractID) {
+            try {
+                // Make a DELETE request to the server to delete the tenant
+                const response = await fetch(`http://localhost:3000/deleteContract/${contractID}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const responseData = await response.json();
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+    </script>
+    <style>
+        /* Prompts for creation */
+        .success-prompt {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .error-prompt {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f44336;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div>
+            <form id="tenantForm" onsubmit="sendTenant(event)">
+                <fieldset>
+                    <legend>Create New Tenant</legend>
+                    <!-- Tenant ID -->
+                    <div>
+                        <label for="tenantID">Tenant ID*</label>
+                        <input id="tenantID" name="tenantID" type="text" placeholder="Tenant ID" required>
+                    </div>
+                    <!-- Title -->
+                    <div>
+                        <label for="tenantTitle">Title</label>
+                        <select id="tenantTitle" name="tenantTitle">
+                            <option>--Select--</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
+                        <input id="tenantTitle" name="tenantTitle" type="text" placeholder="Other Specify">
+                    </div>
+                    <!-- First Name -->
+                    <div>
+                        <label for="tenantFirstName">First Name(s)*</label>
+                        <input id="tenantFirstName" name="tenantFirstName" type="text" placeholder="First Name"
+                            required>
+                    </div>
+                    <!-- Surname -->
+                    <div>
+                        <label for="tenantSurname">Surname*</label>
+                        <input id="tenantSurname" name="tenantSurname" type="text" placeholder="Surname" required>
+                    </div>
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="tenantPhoneNumber">Phone Number*</label>
+                        <input id="tenantPhoneNumber" name="tenantPhoneNumber" type="text" placeholder="Phone Number"
+                            required>
+                    </div>
+                    <!-- Email -->
+                    <div>
+                        <label for="tenantEmailAddress">Email Address*</label>
+                        <input id="tenantEmailAddress" name="tenantEmailAddress" type="text" placeholder="Email"
+                            required>
+                    </div>
+                    <!-- Address Line 1 -->
+                    <div>
+                        <label for="tenantAddressLine1">Address Line 1*</label>
+                        <input id="tenantAddressLine1" name="tenantAddressLine1" type="text"
+                            placeholder="Address Line 1" required>
+                    </div>
+                    <!-- Address Line 2 -->
+                    <div>
+                        <label for="tenantAddressLine2">Address Line 2*</label>
+                        <input id="tenantAddressLine2" name="tenantAddressLine2" type="text"
+                            placeholder="Address Line 2" required>
+                    </div>
+                    <!-- Town -->
+                    <div>
+                        <label for="tenantTown">Town*</label>
+                        <input id="tenantTown" name="tenantTown" type="text" placeholder="Town" required>
+                    </div>
+                    <!-- County/City -->
+                    <div>
+                        <label for="tenantCounty_City">County/City*</label>
+                        <input id="tenantCounty_City" name="tenantCounty_City" type="text" placeholder="County/City"
+                            required>
+                    </div>
+                    <!-- Eircode -->
+                    <div>
+                        <label for="tenantEircode">Eircode*</label>
+                        <input id="tenantEircode" name="tenantEircode" type="text" placeholder="Eircode" required>
+                    </div>
+                    <!-- Submit Button -->
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div>
+            <form id="landLordForm" onsubmit="sendLandlord(event)">
+                <fieldset>
+                    <legend>Create New Landlord</legend>
+                    <!-- Landlord ID -->
+                    <div>
+                        <label for="landLordID">Landlord ID*</label>
+                        <input id="landLordID" name="landLordID" type="text" placeholder="Landlord ID" required>
+                    </div>
+                    <!-- Title -->
+                    <div>
+                        <label for="landLordTitle">Title</label>
+                        <select id="landLordTitle" name="landLordTitle">
+                            <option>--Select--</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
+                        <input id="landLordTitle" name="landLordTitle" type="text" placeholder="Other Specify">
+                    </div>
+                    <!-- First Name -->
+                    <div>
+                        <label for="landLordFirstName">First Name(s)*</label>
+                        <input id="landLordFirstName" name="landLordFirstName" type="text" placeholder="First Name"
+                            required>
+                    </div>
+                    <!-- Last Name -->
+                    <div>
+                        <label for="landLordSurname">Surname*</label>
+                        <input id="landLordSurname" name="landLordSurname" type="text" placeholder="Surname" required>
+                    </div>
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="landLordPhoneNumber">Phone Number*</label>
+                        <input id="landLordPhoneNumber" name="landLordPhoneNumber" type="text"
+                            placeholder="Phone Number" required>
+                    </div>
+                    <!-- Email -->
+                    <div>
+                        <label for="landLordEmailAddress">Email Address*</label>
+                        <input id="landLordEmailAddress" name="landLordEmailAddress" type="text" placeholder="Email"
+                            required>
+                    </div>
+                    <!-- Date Of Birth -->
+                    <div>
+                        <label for="dateOfBirth">Date Of Birth*</label>
+                        <input id="dateOfBirth" name="dateOfBirth" type="text" placeholder="Date Of Birth" required>
+                    </div>
+                    <!-- Council Permission -->
+                    <div>
+                        <label for="councilPermission">Permission to rent properties from the council* [Y/N]</label>
+                        <select id="councilPermission" name="councilPermission">
+                            <option>--Select--</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <!-- Email Permission -->
+                    <div>
+                        <label for="tenantEmailPermission">Permission for tenants to contact the landlord via email*
+                            [Y/N]</label>
+                        <select id="tenantEmailPermission" name="tenantEmailPermission">
+                            <option>--Select--</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <!-- Address Line 1 -->
+                    <div>
+                        <label for="landLordAddressLine1">Address Line 1*</label>
+                        <input id="landLordAddressLine1" name="landLordAddressLine1" type="text"
+                            placeholder="Address Line 1" required>
+                    </div>
+                    <!-- Address Line 2 -->
+                    <div>
+                        <label for="landLordAddressLine2">Address Line 2*</label>
+                        <input id="landLordAddressLine2" name="landLordAddressLine2" type="text"
+                            placeholder="Address Line 2" required>
+                    </div>
+                    <!-- Town -->
+                    <div>
+                        <label for="landLordTown">Town*</label>
+                        <input id="landLordTown" name="landLordTown" type="text" placeholder="Town" required>
+                    </div>
+                    <!-- County/City -->
+                    <div>
+                        <label for="landLordCounty_City">County/City*</label>
+                        <input id="landLordCounty_City" name="landLordCounty_City" type="text" placeholder="County/City"
+                            required>
+                    </div>
+                    <!-- Eircode -->
+                    <div>
+                        <label for="landLordEircode">Eircode*</label>
+                        <input id="landLordEircode" name="landLordEircode" type="text" placeholder="Eircode" required>
+                    </div>
+                    <!-- Submit Button -->
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div>
+            <form id="contractForm" onsubmit="sendContract(event)">
+                <fieldset>
+                    <legend>Create New Contract</legend>
+                    <!-- Contract ID -->
+                    <div>
+                        <label for="contractID">Contract ID*</label>
+                        <input id="contractID" name="contractID" type="text" placeholder="Contract ID" required>
+                    </div>
+                    <!-- Contract Date -->
+                    <div>
+                        <label for="date">Contract Date*</label>
+                        <input id="date" name="date" type="text" placeholder="Contract Date" required>
+                    </div>
+                    <!-- Property Address -->
+                    <div>
+                        <label for="propertyAddress">Property Address*</label>
+                        <input id="propertyAddress" name="propertyAddress" type="text" placeholder="Property Address"
+                            required>
+                    </div>
+                    <!-- Tenant ID For Contract -->
+                    <div>
+                        <label for="tenant">Tenant(s)*</label>
+                        <input id="tenant" name="tenant" type="text"
+                            placeholder="Enter Tenant ID(s) separated by commas" required>
+                    </div>
+                    <!-- Landlord -->
+                    <div>
+                        <label for="landLord">Landlord*</label>
+                        <input id="landLord" name="landLord" type="text" placeholder="Landlord" required>
+                    </div>
+                    <!-- Fee -->
+                    <div>
+                        <label for="monthlyFee">Fee (Monthly) (€)*</label>
+                        <input id="monthlyFee" name="monthlyFee" type="text" placeholder="Fee (Monthly) (€)" required>
+                    </div>
+                    <!-- Property Door Number -->
+                    <div>
+                        <label for="propertyDoorNumber">Property Door Number*</label>
+                        <input id="propertyDoorNumber" name="propertyDoorNumber" type="text"
+                            placeholder="Property Door Number" required>
+                    </div>
+                    <!-- Contract Length -->
+                    <div>
+                        <label for="contractLength">Contract Length*</label>
+                        <select id="contractLength" name="contractLength">
+                            <option>--Select--</option>
+                            <option value="Month">Month</option>
+                            <option value="Year">Year</option>
+                            <option value="Permanent">Permanent</option>
+                        </select>
+                    </div>
+                    <!-- Property Type -->
+                    <div>
+                        <label for="propertyType">Property Type*</label>
+                        <select id="propertyType" name="propertyType">
+                            <option>--Select--</option>
+                            <option value="Apartment">Apartment</option>
+                            <option value="Semi-Detached">Semi-Detached</option>
+                            <option value="Detached">Detached</option>
+                        </select>
+                        <input id="propertyType" name="propertyType" type="text" placeholder="Other Specify">
+                    </div>
+                    <!-- Submit Button -->
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- Form to retrieve tenant by ID -->
+        <div>
+            <form id="retrieveTenantForm" onsubmit="retrieveTenant(event)">
+                <fieldset>
+                    <legend>Retrieve Tenant</legend>
+                    <div>
+                        <label for="retrieveTenantID">Enter Tenant ID:</label>
+                        <input id="retrieveTenantID" name="retrieveTenantID" type="text" placeholder="Tenant ID"
+                            required>
+                    </div>
+                    <div>
+                        <input type="submit" value="Retrieve Tenant">
+                    </div>
+                    <div id="tenantDataDisplay">
+                        <h3>Retrieved Tenant Data</h3>
+                        <textarea id="tenantDataTextarea" rows="10" cols="50" readonly></textarea>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- Form to retrieve landlord by ID -->
+        <div>
+            <form id="retrieveLandlordForm" onsubmit="retrieveLandlord(event)">
+                <fieldset>
+                    <legend>Retrieve Landlord</legend>
+                    <div>
+                        <label for="retrieveLandlordID">Enter Landlord ID:</label>
+                        <input id="retrieveLandlordID" name="retrieveLandlordID" type="text" placeholder="Landlord ID"
+                            required>
+                    </div>
+                    <div>
+                        <input type="submit" value="Retrieve Landlord">
+                    </div>
+                    <div id="landLordDataDisplay">
+                        <h3>Retrieved Landlord Data</h3>
+                        <textarea id="landLordDataTextarea" rows="10" cols="50" readonly></textarea>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- Form to retrieve contract by ID -->
+        <div>
+            <form id="retrieveContractForm" onsubmit="retrieveContract(event)">
+                <fieldset>
+                    <legend>Retrieve Contract</legend>
+                    <div>
+                        <label for="retrieveContractID">Enter Contract ID:</label>
+                        <input id="retrieveContractID" name="retrieveContractID" type="text" placeholder="Contract ID"
+                            required>
+                    </div>
+                    <div>
+                        <input type="submit" value="Retrieve Contract">
+                    </div>
+                    <div id="contractDataDisplay">
+                        <h3>Retrieved Contract Data</h3>
+                        <textarea id="contractDataTextarea" rows="10" cols="50" readonly></textarea>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- Update Forms -->
+        <!-- Form to update tenant by ID -->
+        <div>
+            <form id="updateTenantForm" onsubmit="updateTenant(event)">
+                <fieldset>
+                    <legend>Update Tenant</legend>
+                    <!-- Tenant ID -->
+                    <div>
+                        <label for="updateTenantID">Tenant ID*</label>
+                        <input id="updateTenantID" name="updateTenantID" type="text" placeholder="Tenant ID" required>
+                    </div>
+                    <!-- Title -->
+                    <div>
+                        <label for="updateTenantTitle">Title</label>
+                        <select id="updateTenantTitle" name="updateTenantTitle">
+                            <option>--Select--</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
+                        <input id="updateTenantTitle" name="updateTenantTitle" type="text" placeholder="Other Specify">
+                    </div>
+                    <!-- First Name -->
+                    <div>
+                        <label for="updateTenantFirstName">First Name(s)*</label>
+                        <input id="updateTenantFirstName" name="updateTenantFirstName" type="text"
+                            placeholder="First Name" required>
+                    </div>
+                    <!-- Surname -->
+                    <div>
+                        <label for="updateTenantSurname">Surname*</label>
+                        <input id="updateTenantSurname" name="updateTenantSurname" type="text" placeholder="Surname"
+                            required>
+                    </div>
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="updateTenantPhoneNumber">Phone Number*</label>
+                        <input id="updateTenantPhoneNumber" name="updateTenantPhoneNumber" type="text"
+                            placeholder="Phone Number" required>
+                    </div>
+                    <!-- Email -->
+                    <div>
+                        <label for="updateTenantEmailAddress">Email Address*</label>
+                        <input id="updateTenantEmailAddress" name="updateTenantEmailAddress" type="text"
+                            placeholder="Email" required>
+                    </div>
+                    <!-- Address Line 1 -->
+                    <div>
+                        <label for="updateTenantAddressLine1">Address Line 1*</label>
+                        <input id="updateTenantAddressLine1" name="updateTenantAddressLine1" type="text"
+                            placeholder="Address Line 1" required>
+                    </div>
+                    <!-- Address Line 2 -->
+                    <div>
+                        <label for="updateTenantAddressLine2">Address Line 2*</label>
+                        <input id="updateTenantAddressLine2" name="updateTenantAddressLine2" type="text"
+                            placeholder="Address Line 2" required>
+                    </div>
+                    <!-- Town -->
+                    <div>
+                        <label for="updateTenantTown">Town*</label>
+                        <input id="updateTenantTown" name="updateTenantTown" type="text" placeholder="Town" required>
+                    </div>
+                    <!-- County/City -->
+                    <div>
+                        <label for="updateTenantCounty_City">County/City*</label>
+                        <input id="updateTenantCounty_City" name="updateTenantCounty_City" type="text"
+                            placeholder="County/City" required>
+                    </div>
+                    <!-- Eircode -->
+                    <div>
+                        <label for="updateTenantEircode">Eircode*</label>
+                        <input id="updateTenantEircode" name="updateTenantEircode" type="text" placeholder="Eircode"
+                            required>
+                    </div>
+                    <!-- Submit Button -->
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- Form to update landlord by ID -->
+        <div>
+            <form id="updateLandLordForm" onsubmit="sendLandlord(event)">
+                <fieldset>
+                    <legend>Update Landlord</legend>
+                    <!-- Landlord ID -->
+                    <div>
+                        <label for="updateLandlordID">Landlord ID*</label>
+                        <input id="updateLandlordID" name="updateLandlordID" type="text" placeholder="Landlord ID"
+                            required>
+                    </div>
+                    <!-- Title -->
+                    <div>
+                        <label for="updateLandLordTitle">Title</label>
+                        <select id="updateLandLordTitle" name="updateLandLordTitle">
+                            <option>--Select--</option>
+                            <option value="Mx">Mx</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
+                        <input id="updateLandLordTitle" name="updateLandLordTitle" type="text"
+                            placeholder="Other Specify">
+                    </div>
+                    <!-- First Name -->
+                    <div>
+                        <label for="updateLandLordFirstName">First Name(s)*</label>
+                        <input id="updateLandLordFirstName" name="updateLandLordFirstName" type="text"
+                            placeholder="First Name" required>
+                    </div>
+                    <!-- Last Name -->
+                    <div>
+                        <label for="updateLandLordSurname">Surname*</label>
+                        <input id="updateLandLordSurname" name="updateLandLordSurname" type="text" placeholder="Surname"
+                            required>
+                    </div>
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="updateLandLordPhoneNumber">Phone Number*</label>
+                        <input id="updateLandLordPhoneNumber" name="updateLandLordPhoneNumber" type="text"
+                            placeholder="Phone Number" required>
+                    </div>
+                    <!-- Email -->
+                    <div>
+                        <label for="updateLandLordEmailAddress">Email Address*</label>
+                        <input id="updateLandLordEmailAddress" name="updateLandLordEmailAddress" type="text"
+                            placeholder="Email" required>
+                    </div>
+                    <!-- Date Of Birth -->
+                    <div>
+                        <label for="updateDateOfBirth">Date Of Birth*</label>
+                        <input id="updateDateOfBirth" name="updateDateOfBirth" type="text" placeholder="Date Of Birth"
+                            required>
+                    </div>
+                    <!-- Council Permission -->
+                    <div>
+                        <label for="updateCouncilPermission">Permission to rent properties from the council*
+                            [Y/N]</label>
+                        <select id="updateCouncilPermission" name="updateCouncilPermission">
+                            <option>--Select--</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <!-- Email Permission -->
+                    <div>
+                        <label for="updateTenantEmailPermission">Permission for tenants to contact the landlord via
+                            email*
+                            [Y/N]</label>
+                        <select id="updateTenantEmailPermission" name="updateTenantEmailPermission">
+                            <option>--Select--</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <!-- Address Line 1 -->
+                    <div>
+                        <label for="updateLandLordAddressLine1">Address Line 1*</label>
+                        <input id="updateLandLordAddressLine1" name="updateLandLordAddressLine1" type="text"
+                            placeholder="Address Line 1" required>
+                    </div>
+                    <!-- Address Line 2 -->
+                    <div>
+                        <label for="updateLandLordAddressLine2">Address Line 2*</label>
+                        <input id="updateLandLordAddressLine2" name="updateLandLordAddressLine2" type="text"
+                            placeholder="Address Line 2" required>
+                    </div>
+                    <!-- Town -->
+                    <div>
+                        <label for="updateLandLordTown">Town*</label>
+                        <input id="updateLandLordTown" name="updateLandLordTown" type="text" placeholder="Town"
+                            required>
+                    </div>
+                    <!-- County/City -->
+                    <div>
+                        <label for="updateLandLordCounty_City">County/City*</label>
+                        <input id="updateLandLordCounty_City" name="updateLandLordCounty_City" type="text"
+                            placeholder="County/City" required>
+                    </div>
+                    <!-- Eircode -->
+                    <div>
+                        <label for="updateLandLordEircode">Eircode*</label>
+                        <input id="updateLandLordEircode" name="updateLandLordEircode" type="text" placeholder="Eircode"
+                            required>
+                    </div>
+                    <!-- Submit Button -->
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- Form to update contract by ID -->
+        <div>
+            <form id="updateContractForm" onsubmit="sendContract(event)">
+                <fieldset>
+                    <legend>Update Contract</legend>
+                    <!-- Contract ID -->
+                    <div>
+                        <label for="updateContractID">Contract ID*</label>
+                        <input id="updateContractID" name="updateContractID" type="text" placeholder="Contract ID"
+                            required>
+                    </div>
+                    <!-- Contract Date -->
+                    <div>
+                        <label for="updateDate">Contract Date*</label>
+                        <input id="updateDate" name="updateDate" type="text" placeholder="Contract Date" required>
+                    </div>
+                    <!-- Property Address -->
+                    <div>
+                        <label for="updatePropertyAddress">Property Address*</label>
+                        <input id="updatePropertyAddress" name="updatePropertyAddress" type="text"
+                            placeholder="Property Address" required>
+                    </div>
+                    <!-- Tenant ID For Contract -->
+                    <div>
+                        <label for="updateTenant">Tenant(s)*</label>
+                        <input id="updateTenant" name="updateTenant" type="text"
+                            placeholder="Enter Tenant ID(s) separated by commas" required>
+                    </div>
+                    <!-- Landlord -->
+                    <div>
+                        <label for="updateLandLord">Landlord*</label>
+                        <input id="updateLandLord" name="updateLandLord" type="text" placeholder="Landlord" required>
+                    </div>
+                    <!-- Fee -->
+                    <div>
+                        <label for="updateMonthlyFee">Fee (Monthly) (€)*</label>
+                        <input id="updateMonthlyFee" name="updateMonthlyFee" type="text" placeholder="Fee (Monthly) (€)"
+                            required>
+                    </div>
+                    <!-- Property Door Number -->
+                    <div>
+                        <label for="updatePropertyDoorNumber">Property Door Number*</label>
+                        <input id="updatePropertyDoorNumber" name="updatePropertyDoorNumber" type="text"
+                            placeholder="Property Door Number" required>
+                    </div>
+                    <!-- Contract Length -->
+                    <div>
+                        <label for="updateContractLength">Contract Length*</label>
+                        <select id="updateContractLength" name="updateContractLength">
+                            <option>--Select--</option>
+                            <option value="Month">Month</option>
+                            <option value="Year">Year</option>
+                            <option value="Permanent">Permanent</option>
+                        </select>
+                    </div>
+                    <!-- Property Type -->
+                    <div>
+                        <label for="updatePropertyType">Property Type*</label>
+                        <select id="updatePropertyType" name="updatePropertyType">
+                            <option>--Select--</option>
+                            <option value="Apartment">Apartment</option>
+                            <option value="Semi-Detached">Semi-Detached</option>
+                            <option value="Detached">Detached</option>
+                        </select>
+                        <input id="updatePropertyType" name="updatePropertyType" type="text"
+                            placeholder="Other Specify">
+                    </div>
+                    <!-- Submit Button -->
+                    <div>
+                        <input type="submit" value="Submit">
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- Delete Forms -->
+        <!-- Form to delete tenant by ID -->
+        <form onsubmit="deleteTenant(document.getElementById('deleteTenantID').value)">
+            <fieldset>
+                <legend>Delete Tenant</legend>
+                <div>
+                    <label for="deleteTenantID">Enter Tenant ID:</label>
+                    <input id="deleteTenantID" type="text" placeholder="Tenant ID" required>
+                </div>
+                <!-- Submit Button -->
+                <div>
+                    <input type="submit" value="Delete Tenant">
+                </div>
+            </fieldset>
+        </form>
+
+        <!-- Form to delete landlord by ID -->
+        <form onsubmit="deleteLandLord(document.getElementById('deleteLandLordID').value)">
+            <fieldset>
+                <legend>Delete Landlord</legend>
+                <div>
+                    <label for="deleteLandLordID">Enter Landlord ID:</label>
+                    <input id="deleteLandLordID" type="text" placeholder="Landlord ID" required>
+                </div>
+                <!-- Submit Button -->
+                <div>
+                    <input type="submit" value="Delete Landlord">
+                </div>
+            </fieldset>
+        </form>
+
+        <!-- Form to delete tenant by ID -->
+        <form onsubmit="deleteContract(document.getElementById('deleteContractID').value)">
+            <fieldset>
+                <legend>Delete Contract</legend>
+                <div>
+                    <label for="deleteContractID">Enter Contract ID:</label>
+                    <input id="deleteContractID" type="text" placeholder="Contract ID" required>
+                </div>
+                <!-- Submit Button -->
+                <div>
+                    <input type="submit" value="Delete Contract">
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>
